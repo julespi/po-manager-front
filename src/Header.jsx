@@ -1,4 +1,4 @@
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 
 function Header({ userLogedIn, logOutHandler }) {
@@ -12,13 +12,15 @@ function Header({ userLogedIn, logOutHandler }) {
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">Inicio</Nav.Link>
           <Nav.Link as={Link} to="/products">Productos</Nav.Link>
-          
           <Nav.Link as={Link} to="/purchase-order">Orden de compra</Nav.Link>
-          {userLogedIn !== null &&  <>
+          {/* ----------- ORDENES -------------*/}
+          <Nav.Link as={Link} to="/orders">
+            Ordenes <Badge style={{ position: "absolute", top: "0.5rem", start: "100" }} pill bg="danger">x</Badge>
+          </Nav.Link>
+          {userLogedIn !== null && <>
             <Nav.Link as={Link} to="/manage-employees">Empleados</Nav.Link>
             <Nav.Link as={Link} to="/suppliers">Proveedores</Nav.Link>
-            </>}
-
+          </>}
         </Nav>
         <Nav className="me-4">
           {userLogedIn === null ?

@@ -2,7 +2,8 @@ import Container from 'react-bootstrap/Container';
 import Header from './Header'
 import Data from './Data'
 import Detail from './Detail'
-import Login from "./Login";
+import Login from "./Login"
+import Orders from './Orders'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import PurchaseOrder from "./PurchaseOrder";
 import { useState } from 'react';
@@ -32,6 +33,7 @@ function App() {
           <Route path="login" element={<Login logInHandler={logInHandler}/>} />
           <Route path="suppliers" element={<div>Lista de proveedores</div>} />
           <Route path="purchase-order" element={<PurchaseOrder />} />
+          <Route path="orders" element={<Orders />} />
           <Route
             path="*"
             element={
