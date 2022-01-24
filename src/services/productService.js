@@ -1,44 +1,50 @@
-
 const baseUrl = "http://localhost:8080/api/products"
 
 const productService = {
-
-    async getAll() {
-        return fetch(baseUrl).then(res => res.json())
-    },
-    async getById(id) {
-        return fetch(baseUrl + "/" + id).then(res => res.json())
-    },
-    async update(product, id) {
-        return fetch(baseUrl + "/" + id, {
-            method: "put",
-            body: JSON.stringify(product),
-            headers: { 'Content-Type': 'application/json' },
-        }).then(res => res.json())
-    },
-    async getByDescription(description) {
-        return fetch(baseUrl + "/search?description=" + description).then(res => res.json())
-    },
-    async create(product) {
-        let ok = false
-        return fetch(baseUrl, {
-            method: "post",
-            body: JSON.stringify(product),
-            headers: { 'Content-Type': 'application/json' },
-        })
-            .then(res => {
-                ok = res.ok
-                return res.json()
-            })
-            .then(data => {
-                if (ok) {
-                    return data.payload
-                }
-                throw data.message
-            }
-            )
+  async getAll(page, size) {
+    if (page == null) {
+      page = 0
     }
-
+    if (size == null) {
+      size = 5
+    }
+    return fetch(baseUrl + "?page=" + page + "&size=" + size).then((res) =>
+      res.json()
+    )
+  },
+  async getById(id) {
+    return fetch(baseUrl + "/" + id).then((res) => res.json())
+  },
+  async update(product, id) {
+    return fetch(baseUrl + "/" + id, {
+      method: "put",
+      body: JSON.stringify(product),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => res.json())
+  },
+  async getByDescription(description) {
+    return fetch(baseUrl + "/search?description=" + description).then((res) =>
+      res.json()
+    )
+  },
+  async create(product) {
+    let ok = false
+    return fetch(baseUrl, {
+      method: "post",
+      body: JSON.stringify(product),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => {
+        ok = res.ok
+        return res.json()
+      })
+      .then((data) => {
+        if (ok) {
+          return data.payload
+        }
+        throw data.message
+      })
+  },
 }
 
 export default productService
