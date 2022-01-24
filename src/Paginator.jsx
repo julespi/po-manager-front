@@ -2,16 +2,13 @@ import React from "react"
 import { Pagination } from "react-bootstrap"
 import { useNavigate } from "react-router-dom";
 
-function Paginator({ paginationInfo, destinationPrefix }) {
-  const navigate = useNavigate();
-  const urlParam = "?page="
+function Paginator({ paginationInfo, selectedPageHandler }) {
 
 
   const itemClickHandller = (text) => {
     if (text) {
       console.log(text)
-      navigate(destinationPrefix + urlParam + (Number(text) - 1))
-
+      selectedPageHandler(Number(text) - 1)
     }
 
   }

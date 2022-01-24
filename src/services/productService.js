@@ -1,16 +1,22 @@
 const baseUrl = "http://localhost:8080/api/products"
 
 const productService = {
-  async getAll(page, size) {
+  async getAll(filter, page, size) {
+    if (filter == null) {
+      filter = ""
+    }
     if (page == null) {
       page = 0
     }
     if (size == null) {
       size = 5
     }
-    return fetch(baseUrl + "?page=" + page + "&size=" + size).then((res) =>
-      res.json()
+    console.log(
+      baseUrl + "?filter=" + filter + "&page=" + page + "&size=" + size
     )
+    return fetch(
+      baseUrl + "?filter=" + filter + "&page=" + page + "&size=" + size
+    ).then((res) => res.json())
   },
   async getById(id) {
     return fetch(baseUrl + "/" + id).then((res) => res.json())

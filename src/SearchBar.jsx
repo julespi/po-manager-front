@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { InputGroup, FormControl, SplitButton, Dropdown } from 'react-bootstrap';
 
-function SearchBar({onSubmitHandler}) {
+function SearchBar({ onSubmitHandler }) {
 
   const [searchValue, setSearchValue] = useState("")
 
@@ -12,11 +12,11 @@ function SearchBar({onSubmitHandler}) {
   return (
     <>
       <InputGroup className="mb-3">
-        <FormControl 
-        aria-label="Text input with dropdown button"
-        placeholder='Ingrese descripcion del producto que desea buscar'
-        value={searchValue}
-        onChange={(e) => onChangeSearchValueHandler(e.target.value)}
+        <FormControl
+          aria-label="Text input with dropdown button"
+          placeholder='Ingrese descripcion del producto que desea buscar'
+          value={searchValue}
+          onChange={(e) => onChangeSearchValueHandler(e.target.value)}
         />
         <SplitButton
           variant="outline-secondary"

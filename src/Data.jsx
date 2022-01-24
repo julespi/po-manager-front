@@ -11,8 +11,8 @@ function Data() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [products, setProducts] = useState([]);
     const [pageInfo, setPageInfo] = useState({});
-
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [selectedPage, setSelectedPage] = useState(null);
+    const [selectedFilter, setSelectedFilter] = useState(null);
 
     const navigate = useNavigate();
 
@@ -22,37 +22,33 @@ function Data() {
     };
 
     useEffect(() => {
-        completeTable(null);
-    }, [searchParams]);
+        completeTable();
+    }, [selectedPage, selectedFilter]);
 
-    const completeTable = (description) => {
-        if (description == null) {
-            productService.getAll(searchParams.get("page"), searchParams.get("size")).then(
-                (data) => {
-                    console.log(data)
-                    setProducts(data.payload);
-                    setPageInfo(data.page);
-                    setIsLoaded(true);
-                },
-                (error) => {
-                    setError(error);
-                    setIsLoaded(true);
-                }
-            );
-        } else {
-            productService.getByDescription(description).then(
-                (data) => {
-                    console.log(data.payload);
-                    setProducts(data.payload);
-                    setPageInfo(data.page);
-                    setIsLoaded(true);
-                },
-                (error) => {
-                    setError(error);
-                    setIsLoaded(true);
-                }
-            );
-        }
+    const selectedPageHandler = (pageNumber) => {
+        setSelectedPage(pageNumber)
+    }
+
+    const selectedFilterHandler = (filter) => {
+        setSelectedFilter(filter)
+    }
+
+    const completeTable = () => {
+        productService.getAll(
+            selectedFilter,
+            selectedPage
+        ).then(
+            (data) => {
+                console.log(data)
+                setProducts(data.payload);
+                setPageInfo(data.page);
+                setIsLoaded(true);
+            },
+            (error) => {
+                setError(error);
+                setIsLoaded(true);
+            }
+        )
     };
 
     if (error) {
@@ -65,7 +61,7 @@ function Data() {
                 <Card.Title className="ms-3 mt-2">Listado de productos</Card.Title>
                 <Card.Body>
                     <div className="d-flex">
-                        <SearchBar onSubmitHandler={completeTable} />
+                        <SearchBar onSubmitHandler={selectedFilterHandler} />
                         <Button className="mb-3 ms-auto" as={Link} to="/products/new">
                             Nuevo
                         </Button>
@@ -104,7 +100,7 @@ function Data() {
                             ))}
                         </tbody>
                     </Table>
-                    <Paginator paginationInfo={pageInfo} destinationPrefix={"/"} />
+                    <Paginator paginationInfo={pageInfo} selectedPageHandler={selectedPageHandler} />
                 </Card.Body>
             </Card>
         );
