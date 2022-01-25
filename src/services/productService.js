@@ -8,15 +8,9 @@ const productService = {
     if (page == null) {
       page = 0
     }
-    if (size == null) {
-      size = 5
-    }
-    console.log(
-      baseUrl + "?filter=" + filter + "&page=" + page + "&size=" + size
+    return fetch(baseUrl + "?filter=" + filter + "&page=" + page).then((res) =>
+      res.json()
     )
-    return fetch(
-      baseUrl + "?filter=" + filter + "&page=" + page + "&size=" + size
-    ).then((res) => res.json())
   },
   async getById(id) {
     return fetch(baseUrl + "/" + id).then((res) => res.json())

@@ -22,7 +22,7 @@ function Login({ logInHandler }) {
           if (user == null) {
             alert("Credenciales incorrectas")
           } else {
-            logInHandler(user)
+            fetchOpenedPos(user)
             navigate('/');
           }
         },
@@ -31,6 +31,21 @@ function Login({ logInHandler }) {
           logInHandler(null)
         }
       )
+  }
+
+  const fetchOpenedPos = (user) => {
+    userService.getOrdersForUserId(user.id, true)
+      .then(
+        (po) => {
+          console.log(po.payload)
+          logInHandler(user, po.payload)
+        },
+        (error) => {
+          console.log("Error fetching login credentials")
+          logInHandler(null, [])
+        }
+      )
+
   }
 
   const onChangeEmail = (value) => {

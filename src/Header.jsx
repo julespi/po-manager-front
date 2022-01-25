@@ -1,7 +1,10 @@
 import { Navbar, Nav, NavDropdown, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
+import React, { useEffect } from "react";
 
-function Header({ userLogedIn, logOutHandler }) {
+function Header({ userLogedIn, logOutHandler, openPo }) {
+
+
 
 
   return (
@@ -12,12 +15,16 @@ function Header({ userLogedIn, logOutHandler }) {
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">Inicio</Nav.Link>
           <Nav.Link as={Link} to="/products">Productos</Nav.Link>
-          <Nav.Link as={Link} to="/purchase-order">Orden de compra</Nav.Link>
           {/* ----------- ORDENES -------------*/}
-          <Nav.Link as={Link} to="/orders">
-            Ordenes <Badge style={{ position: "absolute", top: "0.5rem", start: "100" }} pill bg="danger">x</Badge>
-          </Nav.Link>
+
           {userLogedIn !== null && <>
+
+            <Nav.Link as={Link} to="/cart">
+              Carrito
+              <Badge style={{ position: "absolute", top: "0.5rem", start: "0rem" }} pill bg="danger">
+                {(openPo !== null && openPo.length > 0) ? openPo[0].details.length : "0"}
+              </Badge>
+            </Nav.Link>
             <Nav.Link as={Link} to="/manage-employees">Empleados</Nav.Link>
             <Nav.Link as={Link} to="/suppliers">Proveedores</Nav.Link>
           </>}

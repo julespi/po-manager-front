@@ -1,47 +1,9 @@
 import Table from 'react-bootstrap/Table'
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { Row, Col, Form, Card, Button, Badge } from 'react-bootstrap';
-import Select from 'react-select'
-import productService from './services/productService';
-import supplierService from './services/supplierService';
-import categoryService from './services/categoryService';
-import orderService from './services/orderService';
+import userService from './services/userService';
 
-function Orders() {
-
-    /*const [show, setShow] = useState(false);
-
-    const handleAddProduct = () => {
-        setShow(true);
-    }
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    const [options, setOptions] = useState([])
-    const [done, setDone] = useState(false)
-
-    const [productState, setProductState] = useState({
-        loading: true,
-        products: [],
-        message: "",
-        error: null,
-    })
-
-    const [categoryState, setCategoryState] = useState({
-        loading: true,
-        category: [],
-        message: "",
-        error: null,
-    })
-
-    const [supplierState, setSupplierState] = useState({
-        loading: true,
-        supplier: [],
-        message: "",
-        error: null,
-    })*/
+function Orders({ userLogedIn }) {
 
     const [orderState, setOrderState] = useState({
         loaded: false,
@@ -52,37 +14,20 @@ function Orders() {
 
 
     useEffect(() => {
+        if (userLogedIn != null && "id" in userLogedIn) {
+            userService.getOrdersForUserId(userLogedIn.id)
+                .then(
+                    (data) => {
+                        console.log(data)
+                        setOrderState({ loading: false, orders: data.payload })
+                    },
+                    (error) => {
+                        console.log(error)
+                        setOrderState({ loading: true, error: error })
+                    }
+                )
+        }
 
-        orderService.getAll()
-            .then(
-                (data) => {
-                    setOrderState({ loading: false, orders: data.payload })
-                },
-                (error) => {
-                    console.log(error)
-                    setOrderState({ loading: true, error: error })
-                }
-            )
-
-        /*supplierService.getAll().then(
-            (data) => {
-                setSupplierState({ loading: false, supplier: data.payload })
-            },
-            (error) => {
-                console.log(error)
-                setSupplierState({ loading: true, error: error })
-            }
-        )
-
-        categoryService.getAll().then(
-            (data) => {
-                setCategoryState({ loading: false, category: data.payload })
-            },
-            (error) => {
-                console.log(error)
-                setCategoryState({ loading: true, error: error })
-            }
-        )*/
     }, [])
 
     /*
@@ -141,17 +86,17 @@ function Orders() {
                                 </thead>
                                 <tbody>
                                     {orderState.orders.map(order => (
-                            <tr key={order.id}>
-                                <td>{order.id}</td>
-                                <td>{order.detailsQty}</td>
-                                <td>{order.created}</td>
-                                <td>{order.isOpen?
-                                    <Badge bg="success">Abierto</Badge>
-                                    :
-                                    <Badge bg="danger">Cerrado</Badge>
-                                    }</td>
-                            </tr>
-                        ))}
+                                        <tr key={order.id}>
+                                            <td>{order.id}</td>
+                                            <td>{order.details.length}</td>
+                                            <td>{order.created}</td>
+                                            <td>{order.isOpen ?
+                                                <Badge bg="success">Abierto</Badge>
+                                                :
+                                                <Badge bg="danger">Cerrado</Badge>
+                                            }</td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </Table>
                         </Card.Body>
@@ -163,7 +108,7 @@ function Orders() {
 
 
 
-    
+
         </div>
     );
 }

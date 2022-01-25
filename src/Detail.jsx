@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom";
-import { Form, Button, Card, Col, Row, InputGroup } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
-import categoryService from "./services/categoryService";
-import productService from "./services/productService";
-import supplierService from "./services/supplierService";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom"
+import { Form, Button, Card, Col, Row, InputGroup } from "react-bootstrap"
+import React, { useState, useEffect } from "react"
+import categoryService from "./services/categoryService"
+import productService from "./services/productService"
+import supplierService from "./services/supplierService"
+import { useNavigate } from "react-router-dom"
+import orderService from "./services/orderService"
 
 function Detail({ userLogedIn, createMode }) {
-  let params = useParams();
-  const navigate = useNavigate();
+  let params = useParams()
+  const navigate = useNavigate()
 
   const defaultErrors = {
     description: "",
@@ -18,8 +19,10 @@ function Detail({ userLogedIn, createMode }) {
     discontinuous: "",
     supplierId: "",
     categoryId: "",
-  };
-  const [errors, setErrors] = useState(defaultErrors);
+  }
+  const [errors, setErrors] = useState(defaultErrors)
+
+  const [selectedQuantity, setSelectedQuantity] = useState(0)
 
   const [productState, setProductState] = useState({
     loaded: false,
@@ -35,7 +38,7 @@ function Detail({ userLogedIn, createMode }) {
     },
     message: "",
     error: null,
-  });
+  })
 
   const [categoryState, setCategoryState] = useState({
     loaded: false,
@@ -121,6 +124,11 @@ function Detail({ userLogedIn, createMode }) {
     setProductState({ product: product });
   };
 
+
+  const handleQuantitySelect = (value) => {
+    setSelectedQuantity(value)
+  };
+
   const handleSupplierSelect = (value) => {
     let product = productState.product;
     product.supplierId = value;
@@ -132,7 +140,18 @@ function Detail({ userLogedIn, createMode }) {
   };
 
   const handlePurchase = () => {
-    console.log("purchase");
+    let detail = {
+      "productId": productState.product.id,
+      "quantity": selectedQuantity,
+      "unitSalePrice": productState.product.unitPrice
+    }
+    let po = {
+      "clientId": 1,
+      "isOpen": true,
+      "details": [detail]
+    }
+    console.log(po);
+    orderService.create(po).then(response => console.log(response))
   };
 
   const handleUpdateClick = () => {
@@ -300,8 +319,8 @@ function Detail({ userLogedIn, createMode }) {
             </Form.Group>
           </Row>
           {!createMode &&
-          userLogedIn !== null &&
-          userLogedIn.role === "MANAGER" ? (
+            userLogedIn !== null &&
+            userLogedIn.role === "MANAGER" ? (
             <Form.Check
               className="mb-3"
               type="switch"
@@ -313,27 +332,51 @@ function Detail({ userLogedIn, createMode }) {
           ) : (
             ""
           )}
+          <Row>
+            <Col sm={3}>
+              <Button variant="secondary" className="me-5" href="/products">
+                Regresar
+              </Button>
+            </Col>
+            {editMode && (
+              <Col sm={3}>
+                <Button variant="primary" onClick={() => handleUpdateClick()}>
+                  Actualizar
+                </Button>
+              </Col>
+            )}
+            {createMode ? (
+              <Col sm={3}>
+                <Button variant="success" onClick={() => handleCreateClick()}>
+                  Crear
+                </Button>
+              </Col>
+            ) : (
 
-          <Button variant="secondary" className="me-5" href="/products">
-            Regresar
-          </Button>
-          {editMode && (
-            <Button variant="primary" onClick={() => handleUpdateClick()}>
-              Actualizar
-            </Button>
-          )}
-          {createMode ? (
-            <Button variant="success" onClick={() => handleCreateClick()}>
-              Crear
-            </Button>
-          ) : (
-            <Button variant="success" onClick={() => handlePurchase()}>
-              Agregar a la OC
-            </Button>
-          )}
+              <>
+                <Form.Group as={Col} sm={3}>
+                  <Form.Select onChange={(e) => handleQuantitySelect(e.target.value)}>
+                    {Array.from(Array(productState.product.stock), (e, i) => {
+                      return (
+                        <option key={i + 1} value={i + 1}>Cantidad: {i + 1} unidad</option>
+                      )
+                    })}
+                  </Form.Select>
+                  <Form.Text className="text-muted">
+                    {productState.product.stock} disponible
+                  </Form.Text>
+                </Form.Group>
+                <Col>
+                  <Button variant="success" onClick={() => handlePurchase()}>
+                    Agregar a la OC
+                  </Button>
+                </Col>
+              </>
+            )}
+          </Row>
         </Form>
       </Card.Body>
-    </Card>
+    </Card >
   );
   //}
 }

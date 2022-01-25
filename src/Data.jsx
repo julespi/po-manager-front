@@ -1,29 +1,29 @@
 import Table from "react-bootstrap/Table";
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
-import { Card, Button, Image } from "react-bootstrap";
-import productService from "./services/productService";
-import SearchBar from "./SearchBar";
-import Paginator from "./Paginator";
+import React, { useState, useEffect } from "react"
+import { useNavigate, Link, useSearchParams } from "react-router-dom"
+import { Card, Button, Image } from "react-bootstrap"
+import productService from "./services/productService"
+import SearchBar from "./SearchBar"
+import Paginator from "./Paginator"
 
 function Data() {
-    const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [products, setProducts] = useState([]);
-    const [pageInfo, setPageInfo] = useState({});
-    const [selectedPage, setSelectedPage] = useState(null);
-    const [selectedFilter, setSelectedFilter] = useState(null);
+    const [error, setError] = useState(null)
+    const [isLoaded, setIsLoaded] = useState(false)
+    const [products, setProducts] = useState([])
+    const [pageInfo, setPageInfo] = useState({})
+    const [selectedPage, setSelectedPage] = useState(null)
+    const [selectedFilter, setSelectedFilter] = useState(null)
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const onRowClick = (id) => {
-        console.log(id);
-        navigate("/products/" + id);
+        console.log(id)
+        navigate("/products/" + id)
     };
 
     useEffect(() => {
-        completeTable();
-    }, [selectedPage, selectedFilter]);
+        completeTable()
+    }, [selectedPage, selectedFilter])
 
     const selectedPageHandler = (pageNumber) => {
         setSelectedPage(pageNumber)
@@ -39,7 +39,6 @@ function Data() {
             selectedPage
         ).then(
             (data) => {
-                console.log(data)
                 setProducts(data.payload);
                 setPageInfo(data.page);
                 setIsLoaded(true);
@@ -67,14 +66,6 @@ function Data() {
                         </Button>
                     </div>
                     <Table striped bordered hover>
-                        {/*/<thead>
-                            <tr>
-                                <th>id</th>
-                                <th>Descripcion</th>
-                                <th>Precio Unitario</th>
-                                <th>Stock</th>
-                            </tr>
-                        </thead>*/}
                         <tbody>
                             {products.map((product) => (
                                 <tr key={product.id} onClick={() => onRowClick(product.id)}>
@@ -86,7 +77,11 @@ function Data() {
                                         }}
                                     >
                                         <Image
-                                            src={product.imageUrl}
+                                            src={product.imageUrl === "" ?
+                                                '/imagen_no_disponible.png'
+                                                :
+                                                product.imageUrl
+                                            }
                                             fluid={true}
                                             style={{ maxWidth: "280px", maxHeight: "280px" }}
                                         />
