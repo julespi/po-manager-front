@@ -16,6 +16,9 @@ const orderService = {
       .then((res) => res.json())
       .then((data) => data.payload)
   },
+  async deleteDetail(id) {
+    return fetch(baseUrl + "/" + id + "/detail", { method: "DELETE" })
+  },
 }
 
 export default orderService

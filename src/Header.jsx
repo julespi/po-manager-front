@@ -1,10 +1,16 @@
 import { Navbar, Nav, NavDropdown, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Header({ userLogedIn, logOutHandler, openPo }) {
 
+  const [numProducts, setNumProducts] = useState("")
 
+  useEffect(() => {
+    if (openPo !== null && openPo.length > 0) {
+      setNumProducts(openPo[0].details.length)
+    }
+  }, [openPo])
 
 
   return (
@@ -22,7 +28,8 @@ function Header({ userLogedIn, logOutHandler, openPo }) {
             <Nav.Link as={Link} to="/cart">
               Carrito
               <Badge style={{ position: "absolute", top: "0.5rem", start: "0rem" }} pill bg="danger">
-                {(openPo !== null && openPo.length > 0) ? openPo[0].details.length : "0"}
+                {/*(openPo !== null && openPo.length > 0) ? numProducts : "0"*/}
+                {numProducts}
               </Badge>
             </Nav.Link>
             <Nav.Link as={Link} to="/manage-employees">Empleados</Nav.Link>
