@@ -14,15 +14,15 @@ function Orders({ userLogedIn }) {
             details: []
         }
     })
-    const [asd, setAsd] = useState(false)
 
 
     useEffect(() => {
         if (userLogedIn != null && "id" in userLogedIn) {
             userService.getOrdersForUserId(userLogedIn.id, true)
                 .then(
-                    (data) => {
-                        setOrderState({ orderLoaded: true, order: data.payload[0] })
+                    (response) => {
+                        console.log(response.data.payload[0].details)
+                        setOrderState({ orderLoaded: true, order: response.data.payload[0] })
                     },
                     (error) => {
                         console.log(error)
@@ -34,76 +34,31 @@ function Orders({ userLogedIn }) {
 
     useEffect(() => {
         if (orderState.orderLoaded && !orderState.productsLoaded) {
-            const getProductInfo = () => {
+            const getProductInfo = async () => {
                 let details = orderState.order.details
-
+                console.log(details.length)
                 let newDetails = []
+                let detail = {}
                 for (var i = 0; i < details.length; i++) {
-                    productService.getById(details[i].productId)
-                        .then(data => {
-                            let detail
-                            for (var j = 0; j < details.length; j++) {
-                                if (details[j].productId === data.payload.id) {
-                                    detail = details[j]
-                                    detail["product"] = data.payload
-                                    newDetails.push(detail)
-
-                                }
-                            }
-                            let prevOrder = orderState.order
-                            prevOrder.details = newDetails
-                            setOrderState({ order: prevOrder, productsLoaded: true, orderLoaded: true })
-                        })
+                    detail = details[i]
+                    let product = await productService.getById(details[i].productId).then(response => response.payload)
+                    detail["product"] = product
+                    newDetails.push(detail)
                 }
+                let prevOrder = orderState.order
+                prevOrder.details = newDetails
+                setOrderState({ order: prevOrder, productsLoaded: true, orderLoaded: true })
             }
             getProductInfo()
         }
 
     }, [orderState])
 
-
-
-    /*const getProductInfo = (details) => {
-        setProducts([])
-        for (var i = 0; i < details.length; i++) {
-            productService.getById(details[i].productId)
-                .then(data => setProducts((prev) => [...prev, data.payload]))
-        }
-    }*/
-
-
-    /*const getQuantityForProduct = (id) => {
-        for (var i = 0; i < orderState.order.details.length; i++) {
-            if (orderState.order.details[i].productId === id) {
-                return orderState.order.details[i].quantity
-            }
-        }
-        return "error"
-    }
-
-    const getSalePriceForProduct = (id) => {
-        for (var i = 0; i < orderState.order.details.length; i++) {
-            if (orderState.order.details[i].productId === id) {
-                return orderState.order.details[i].unitSalePrice
-            }
-        }
-        return "error"
-    }
-
-    const getDetailIdForProduct = (id) => {
-        for (var i = 0; i < orderState.order.details.length; i++) {
-            if (orderState.order.details[i].productId === id) {
-                return orderState.order.details[i].id
-            }
-        }
-        return "error"
-    }*/
-
     const removeDetail = (id) => {
-        orderService.deleteDetail(id).then(() => {
+        orderService.deleteDetail(id).then(response => {
+            console.log(response)
             let updatedDetails = []
             for (var i = 0; i < orderState.order.details.length; i++) {
-                console.log(orderState.order.details[i].id === id)
                 if (orderState.order.details[i].id !== id) {
                     updatedDetails.push(orderState.order.details[i])
                 }
@@ -166,9 +121,6 @@ function Orders({ userLogedIn }) {
                 </Card.Body>
 
             </Card>
-
-
-
 
 
         </div>

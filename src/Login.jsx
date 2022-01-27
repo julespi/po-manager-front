@@ -37,8 +37,8 @@ function Login({ logInHandler }) {
     userService.getOrdersForUserId(user.id, true)
       .then(
         (po) => {
-          console.log(po.payload)
-          logInHandler(user, po.payload)
+          console.log(po.data.payload)
+          logInHandler(user, po.data.payload)
         },
         (error) => {
           console.log("Error fetching login credentials")

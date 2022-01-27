@@ -1,4 +1,5 @@
-const baseUrl = "http://localhost:8080/api/products"
+//const baseUrl = "http://localhost:8080/api/products"
+const baseUrl = "https://po-manager-back.herokuapp.com/api/products"
 
 const productService = {
   async getAll(filter, page, size) {
@@ -13,6 +14,7 @@ const productService = {
     )
   },
   async getById(id) {
+    console.log(baseUrl + "/" + id)
     return fetch(baseUrl + "/" + id).then((res) => res.json())
   },
   async update(product, id) {

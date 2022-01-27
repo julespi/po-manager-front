@@ -1,4 +1,7 @@
-const baseUrl = "http://localhost:8080/api/users"
+import axios from "axios"
+
+//const baseUrl = "http://localhost:8080/api/users"
+const baseUrl = "https://po-manager-back.herokuapp.com/api/users"
 
 const userService = {
   async logIn(userToLogin) {
@@ -16,12 +19,19 @@ const userService = {
       }
     })
   },
-  async getOrdersForUserId(id, isOpen) {
+  /*async getOrdersForUserId(id, isOpen) {
     let url = baseUrl + "/" + id + "/orders"
     if (isOpen !== null) {
       url += "?isOpen=" + String(Boolean(isOpen))
     }
     return fetch(url).then((res) => res.json())
+  },*/
+  async getOrdersForUserId(id, isOpen) {
+    let url = baseUrl + "/" + id + "/orders"
+    if (isOpen !== null) {
+      url += "?isOpen=" + String(Boolean(isOpen))
+    }
+    return axios.get(url)
   },
 }
 

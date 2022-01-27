@@ -1,4 +1,7 @@
-const baseUrl = "http://localhost:8080/api/orders"
+import axios from "axios"
+
+//const baseUrl = "http://localhost:8080/api/orders"
+const baseUrl = "https://po-manager-back.herokuapp.com/api/orders"
 
 const orderService = {
   async getAll() {
@@ -17,7 +20,7 @@ const orderService = {
       .then((data) => data.payload)
   },
   async deleteDetail(id) {
-    return fetch(baseUrl + "/" + id + "/detail", { method: "DELETE" })
+    return axios.delete(baseUrl + "/" + id + "/detail")
   },
 }
 
