@@ -19,13 +19,6 @@ const userService = {
       }
     })
   },
-  /*async getOrdersForUserId(id, isOpen) {
-    let url = baseUrl + "/" + id + "/orders"
-    if (isOpen !== null) {
-      url += "?isOpen=" + String(Boolean(isOpen))
-    }
-    return fetch(url).then((res) => res.json())
-  },*/
   async getOrdersForUserId(id, isOpen) {
     let url = baseUrl + "/" + id + "/orders"
     if (isOpen !== null) {

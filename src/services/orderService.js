@@ -22,6 +22,9 @@ const orderService = {
   async deleteDetail(id) {
     return axios.delete(baseUrl + "/" + id + "/detail")
   },
+  async update(order, id) {
+    return axios.put(baseUrl + "/" + id, order)
+  },
 }
 
 export default orderService

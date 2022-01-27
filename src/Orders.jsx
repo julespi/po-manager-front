@@ -21,8 +21,9 @@ function Orders({ userLogedIn }) {
             userService.getOrdersForUserId(userLogedIn.id, true)
                 .then(
                     (response) => {
-                        console.log(response.data.payload[0].details)
-                        setOrderState({ orderLoaded: true, order: response.data.payload[0] })
+                        if (response.data.payload.length > 0) {
+                            setOrderState({ orderLoaded: true, order: response.data.payload[0], productsLoaded: false })
+                        }
                     },
                     (error) => {
                         console.log(error)
@@ -33,10 +34,9 @@ function Orders({ userLogedIn }) {
     }, [userLogedIn])
 
     useEffect(() => {
-        if (orderState.orderLoaded && !orderState.productsLoaded) {
+        if (orderState.orderLoaded && orderState.order?.id && !orderState.productsLoaded) {
             const getProductInfo = async () => {
                 let details = orderState.order.details
-                console.log(details.length)
                 let newDetails = []
                 let detail = {}
                 for (var i = 0; i < details.length; i++) {
@@ -70,6 +70,32 @@ function Orders({ userLogedIn }) {
         })
     }
 
+    const confirmPo = () => {
+        let orderToConfirm = orderState.order
+        orderToConfirm.isOpen = false
+        orderService.update(orderToConfirm, orderToConfirm.id)
+            .then(response => {
+                if (response?.status === 200) {
+                    setOrderState({ order: null, productsLoaded: false, orderLoaded: false })
+                }
+            })
+    }
+
+    const deletePo = () => {
+        for (var i = 0; i < orderState.order.details.length; i++) {
+            orderService.deleteDetail(orderState.order.details[i].id).then()
+        }
+        let order = orderState.order
+        order.details = []
+        order.isOpen = false
+        orderService.update(order, order.id)
+            .then(response => {
+                if (response?.status === 200) {
+                    setOrderState({ order: null, productsLoaded: false, orderLoaded: false })
+                }
+            })
+    }
+
 
 
 
@@ -79,44 +105,47 @@ function Orders({ userLogedIn }) {
                 <Card.Title className="ms-3 mt-2 mb-0">Carrito</Card.Title>
                 <Card.Body>
                     <Card>
-
-                        <Card.Body>
-                            <Table striped bordered hover>
-                                <thead>
-                                    <tr>
-                                        <th>id</th>
-                                        <th>Producto</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio unitario</th>
-                                        <th>Precio suma</th>
-                                        <th>Operaciones <Button variant="success" onClick={() => console.log(orderState)}>test</Button></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {orderState.productsLoaded && orderState.order.details.map((detail) => (
-                                        <tr key={detail.id}>
-                                            <td>{detail.id}</td>
-                                            <td>{detail.product.description}</td>
-                                            <td>{detail.quantity}</td>
-                                            <td>$ {detail.unitSalePrice}</td>
-                                            <td>$ {detail.quantity * detail.unitSalePrice}</td>
-                                            <td>
-                                                <Button
-                                                    className="me-2"
-                                                    variant="danger"
-                                                    size="sm"
-                                                    onClick={() => removeDetail(detail.id)}
-                                                >Remover</Button>
-                                                <Button variant="warning" size="sm" disabled>Modificar</Button>
-                                            </td>
-
+                        {!orderState.orderLoaded ?
+                            <Card.Body>Carrito vacio</Card.Body>
+                            :
+                            <Card.Body>
+                                <Table striped bordered hover>
+                                    <thead>
+                                        <tr>
+                                            <th>id</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio unitario</th>
+                                            <th>Precio suma</th>
+                                            <th>Operaciones</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
-                            <Button className="me-2" variant="danger" size="sm">Eliminar carrito</Button>
-                            <Button variant="success">Confirmar compra</Button>
-                        </Card.Body>
+                                    </thead>
+                                    <tbody>
+                                        {orderState.productsLoaded && orderState.order.details.map((detail) => (
+                                            <tr key={detail.id}>
+                                                <td>{detail.id}</td>
+                                                <td>{detail.product.description}</td>
+                                                <td>{detail.quantity}</td>
+                                                <td>$ {detail.unitSalePrice}</td>
+                                                <td>$ {detail.quantity * detail.unitSalePrice}</td>
+                                                <td>
+                                                    <Button
+                                                        className="me-2"
+                                                        variant="danger"
+                                                        size="sm"
+                                                        onClick={() => removeDetail(detail.id)}
+                                                    >Remover</Button>
+                                                    <Button variant="warning" size="sm" disabled>Modificar</Button>
+                                                </td>
+
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                                <Button className="me-2" variant="danger" size="sm" onClick={() => deletePo()}>Eliminar carrito</Button>
+                                <Button variant="success" onClick={() => confirmPo()}>Confirmar compra</Button>
+                            </Card.Body>
+                        }
                     </Card>
                 </Card.Body>
 

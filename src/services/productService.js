@@ -14,7 +14,6 @@ const productService = {
     )
   },
   async getById(id) {
-    console.log(baseUrl + "/" + id)
     return fetch(baseUrl + "/" + id).then((res) => res.json())
   },
   async update(product, id) {
