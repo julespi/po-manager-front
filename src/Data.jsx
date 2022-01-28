@@ -38,22 +38,23 @@ function Data() {
             selectedFilter,
             selectedPage
         ).then(
-            (data) => {
-                setProducts(data.payload);
-                setPageInfo(data.page);
-                setIsLoaded(true);
+            (response) => {
+                console.log(response)
+                setProducts(response.data.payload)
+                setPageInfo(response.data.page)
+                setIsLoaded(true)
             },
             (error) => {
-                setError(error);
-                setIsLoaded(true);
+                setError(error)
+                setIsLoaded(true)
             }
         )
-    };
+    }
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>
     } else {
         return (
             <Card>
@@ -98,7 +99,7 @@ function Data() {
                     <Paginator paginationInfo={pageInfo} selectedPageHandler={selectedPageHandler} />
                 </Card.Body>
             </Card>
-        );
+        )
     }
 }
 

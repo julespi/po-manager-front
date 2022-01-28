@@ -1,10 +1,11 @@
 import axios from "axios"
+import { SERVER } from "./config"
 
-//const baseUrl = "http://localhost:8080/api/users"
-const baseUrl = "https://po-manager-back.herokuapp.com/api/users"
+let baseUrl = SERVER + "/users"
 
 const userService = {
   async logIn(userToLogin) {
+    console.log(baseUrl)
     return fetch(baseUrl + "/login", {
       method: "post",
       body: JSON.stringify(userToLogin),

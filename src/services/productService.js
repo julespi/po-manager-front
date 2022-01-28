@@ -1,17 +1,17 @@
-//const baseUrl = "http://localhost:8080/api/products"
-const baseUrl = "https://po-manager-back.herokuapp.com/api/products"
+import { SERVER } from "./config"
+import axios from "axios"
+
+const baseUrl = SERVER + "/products"
 
 const productService = {
-  async getAll(filter, page, size) {
+  async getAll(filter, page) {
     if (filter == null) {
       filter = ""
     }
     if (page == null) {
       page = 0
     }
-    return fetch(baseUrl + "?filter=" + filter + "&page=" + page).then((res) =>
-      res.json()
-    )
+    return axios.get(baseUrl + "?filter=" + filter + "&page=" + page)
   },
   async getById(id) {
     return fetch(baseUrl + "/" + id).then((res) => res.json())

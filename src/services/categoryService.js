@@ -1,5 +1,6 @@
-//const baseUrl = "http://localhost:8080/api/categories"
-const baseUrl = "https://po-manager-back.herokuapp.com/api/categories"
+import { SERVER } from "./config"
+
+const baseUrl = SERVER + "/categories"
 
 const categoryService = {
   async getAll() {

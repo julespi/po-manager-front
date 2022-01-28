@@ -1,5 +1,6 @@
-//const baseUrl = "http://localhost:8080/api/suppliers"
-const baseUrl = "https://po-manager-back.herokuapp.com/api/suppliers"
+import { SERVER } from "./config"
+
+const baseUrl = SERVER + "/suppliers"
 
 const supplierService = {
   async getAll() {

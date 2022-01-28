@@ -6,6 +6,7 @@ import productService from "./services/productService"
 import supplierService from "./services/supplierService"
 import { useNavigate } from "react-router-dom"
 import orderService from "./services/orderService"
+import userService from "./services/userService"
 
 function Detail({ userLogedIn, createMode }) {
   let params = useParams()
@@ -139,8 +140,8 @@ function Detail({ userLogedIn, createMode }) {
     setEditMode(!editMode);
   };
 
-  const handlePurchase = () => {
-    let detail = {
+  const handlePurchase = async () => {
+    /*let detail = {
       "productId": productState.product.id,
       "quantity": selectedQuantity,
       "unitSalePrice": productState.product.unitPrice
@@ -151,7 +152,16 @@ function Detail({ userLogedIn, createMode }) {
       "details": [detail]
     }
     console.log(po);
-    orderService.create(po).then(response => console.log(response))
+    orderService.create(po).then(response => console.log(response))*/
+
+    let detail = {
+      "productId": productState.product.id,
+      "quantity": selectedQuantity,
+      "unitSalePrice": productState.product.unitPrice
+    }
+
+    let openPo = await orderService.addDetailForUser(detail, userLogedIn.id).then(response => console.log(response))
+
   };
 
   const handleUpdateClick = () => {

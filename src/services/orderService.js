@@ -1,7 +1,7 @@
 import axios from "axios"
+import { SERVER } from "./config"
 
-//const baseUrl = "http://localhost:8080/api/orders"
-const baseUrl = "https://po-manager-back.herokuapp.com/api/orders"
+const baseUrl = SERVER + "/orders"
 
 const orderService = {
   async getAll() {
@@ -24,6 +24,9 @@ const orderService = {
   },
   async update(order, id) {
     return axios.put(baseUrl + "/" + id, order)
+  },
+  async addDetailForUser(detail, userId) {
+    return axios.post(baseUrl + "/detail/" + userId, detail)
   },
 }
 
