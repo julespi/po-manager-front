@@ -28,6 +28,9 @@ const orderService = {
   async addDetailForUser(detail, userId) {
     return axios.post(baseUrl + "/detail/" + userId, detail)
   },
+  async confirm(order, id) {
+    return axios.post(baseUrl + "/confirm/" + id, order)
+  },
 }
 
 export default orderService

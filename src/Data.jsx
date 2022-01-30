@@ -17,7 +17,6 @@ function Data() {
     const navigate = useNavigate()
 
     const onRowClick = (id) => {
-        console.log(id)
         navigate("/products/" + id)
     };
 
@@ -39,7 +38,6 @@ function Data() {
             selectedPage
         ).then(
             (response) => {
-                console.log(response)
                 setProducts(response.data.payload)
                 setPageInfo(response.data.page)
                 setIsLoaded(true)

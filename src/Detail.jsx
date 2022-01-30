@@ -4,9 +4,8 @@ import React, { useState, useEffect } from "react"
 import categoryService from "./services/categoryService"
 import productService from "./services/productService"
 import supplierService from "./services/supplierService"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import orderService from "./services/orderService"
-import userService from "./services/userService"
 
 function Detail({ userLogedIn, createMode }) {
   let params = useParams()
@@ -23,7 +22,7 @@ function Detail({ userLogedIn, createMode }) {
   }
   const [errors, setErrors] = useState(defaultErrors)
 
-  const [selectedQuantity, setSelectedQuantity] = useState(0)
+  const [selectedQuantity, setSelectedQuantity] = useState(1)
 
   const [productState, setProductState] = useState({
     loaded: false,
@@ -127,6 +126,7 @@ function Detail({ userLogedIn, createMode }) {
 
 
   const handleQuantitySelect = (value) => {
+    console.log(value)
     setSelectedQuantity(value)
   };
 
@@ -160,7 +160,16 @@ function Detail({ userLogedIn, createMode }) {
       "unitSalePrice": productState.product.unitPrice
     }
 
-    let openPo = await orderService.addDetailForUser(detail, userLogedIn.id).then(response => console.log(response))
+    orderService.addDetailForUser(detail, userLogedIn.id)
+      .then(response => {
+        if (response.status === 201) {
+          alert(response.data.message)
+          navigate("/")
+        } else {
+          alert(response.data.message)
+        }
+
+      })
 
   };
 
@@ -344,7 +353,7 @@ function Detail({ userLogedIn, createMode }) {
           )}
           <Row>
             <Col sm={3}>
-              <Button variant="secondary" className="me-5" href="/products">
+              <Button variant="secondary" className="me-5" as={Link} to="/">
                 Regresar
               </Button>
             </Col>
@@ -355,14 +364,14 @@ function Detail({ userLogedIn, createMode }) {
                 </Button>
               </Col>
             )}
-            {createMode ? (
+            {createMode &&
               <Col sm={3}>
                 <Button variant="success" onClick={() => handleCreateClick()}>
                   Crear
                 </Button>
               </Col>
-            ) : (
-
+            }
+            {!createMode && userLogedIn != null && "id" in userLogedIn ?
               <>
                 <Form.Group as={Col} sm={3}>
                   <Form.Select onChange={(e) => handleQuantitySelect(e.target.value)}>
@@ -381,8 +390,8 @@ function Detail({ userLogedIn, createMode }) {
                     Agregar a la OC
                   </Button>
                 </Col>
-              </>
-            )}
+              </> : ""
+            }
           </Row>
         </Form>
       </Card.Body>

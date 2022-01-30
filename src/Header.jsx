@@ -20,7 +20,6 @@ function Header({ userLogedIn, logOutHandler, openPo }) {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">Inicio</Nav.Link>
-          <Nav.Link as={Link} to="/products">Productos</Nav.Link>
           {/* ----------- ORDENES -------------*/}
 
           {userLogedIn !== null && <>
@@ -32,8 +31,9 @@ function Header({ userLogedIn, logOutHandler, openPo }) {
                 {numProducts}
               </Badge>
             </Nav.Link>
-            <Nav.Link as={Link} to="/manage-employees">Empleados</Nav.Link>
-            <Nav.Link as={Link} to="/suppliers">Proveedores</Nav.Link>
+            <Nav.Link as={Link} to="/pos">Compras</Nav.Link>
+            <Nav.Link as={Link} disabled to="/manage-employees">Empleados</Nav.Link>
+            <Nav.Link as={Link} disabled to="/suppliers">Proveedores</Nav.Link>
           </>}
         </Nav>
         <Nav className="me-4">
@@ -41,7 +41,7 @@ function Header({ userLogedIn, logOutHandler, openPo }) {
             <Nav.Link as={Link} to="login">Login</Nav.Link>
             :
             <NavDropdown title={userLogedIn.firstName} id="basic-nav-dropdown">
-              <NavDropdown.Item as={Link} to="profile">Perfil</NavDropdown.Item>
+              <NavDropdown.Item disabled as={Link} to="profile">Perfil</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="cart">Carrito</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item
