@@ -31,7 +31,6 @@ function Header({ userLogedIn, logOutHandler, openPo }) {
                 {numProducts}
               </Badge>
             </Nav.Link>
-            <Nav.Link as={Link} to="/pos">Compras</Nav.Link>
             <Nav.Link as={Link} disabled to="/manage-employees">Empleados</Nav.Link>
             <Nav.Link as={Link} disabled to="/suppliers">Proveedores</Nav.Link>
           </>}
